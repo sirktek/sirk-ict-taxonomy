@@ -1,0 +1,190 @@
+# ICT Taxonomy Base Schema in RDF-S (Turtle format)
+# Information & Communications Technology equipment (PCs, network gear) plus a
+# logical "Network" grouping root. Extracted from the machine taxonomy in 3.x.
+
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema:  <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix ict:     <http://taxonomy.sirktek.no/ict#> .
+# Cross-cutting classes/properties (Manufacturer, Model, assetValue, ...)
+@prefix common:  <http://taxonomy.sirktek.no/common#> .
+
+# ===================================================================
+# Root Class
+# ===================================================================
+
+ict:InformationTechnology a rdfs:Class ;
+    rdfs:label "IT Equipment"@en, "IT-utstyr"@no ;
+    skos:altLabel "Information Technology"@en, "ICT"@en ;
+    rdfs:comment "Root class for information & communications technology equipment (computers, network equipment, ...)"@en .
+
+# ===================================================================
+# Level 1 Categories
+# ===================================================================
+
+ict:Computer a rdfs:Class ;
+    rdfs:subClassOf ict:InformationTechnology ;
+    rdfs:label "Computer"@en, "Datamaskin"@no ;
+    skos:altLabel "PC"@en, "PC"@no ;
+    rdfs:comment "Personal computers and servers (desktop, laptop, server)"@en .
+
+ict:NetworkEquipment a rdfs:Class ;
+    rdfs:subClassOf ict:InformationTechnology ;
+    rdfs:label "Network Equipment"@en, "Nettverksutstyr"@no ;
+    skos:altLabel "Networking Equipment"@en ;
+    rdfs:comment "Physical networking devices: routers, switches, access points, firewalls"@en .
+
+# Logical "Network" grouping root — DISTINCT from NetworkEquipment.
+# Tenants create org-specific subcategories here (e.g. "HQ Network") that
+# assets belong to, to document a network and its layout in one place.
+ict:Network a rdfs:Class ;
+    rdfs:subClassOf ict:InformationTechnology ;
+    rdfs:label "Network"@en, "Nettverk"@no ;
+    rdfs:comment "A logical network grouping (not a device): an org-specific network that equipment belongs to, documenting layout/subnets in one place"@en .
+
+# ===================================================================
+# Level 2 Categories - Computers
+# ===================================================================
+
+ict:Desktop a rdfs:Class ;
+    rdfs:subClassOf ict:Computer ;
+    rdfs:label "Desktop"@en, "Stasjonær PC"@no ;
+    rdfs:comment "Desktop/workstation computer"@en .
+
+ict:Laptop a rdfs:Class ;
+    rdfs:subClassOf ict:Computer ;
+    rdfs:label "Laptop"@en, "Bærbar PC"@no ;
+    rdfs:comment "Portable laptop computer"@en .
+
+ict:Server a rdfs:Class ;
+    rdfs:subClassOf ict:Computer ;
+    rdfs:label "Server"@en, "Server"@no ;
+    rdfs:comment "Server computer"@en .
+
+# ===================================================================
+# Level 2 Categories - Network Equipment
+# ===================================================================
+
+ict:Router a rdfs:Class ;
+    rdfs:subClassOf ict:NetworkEquipment ;
+    rdfs:label "Router"@en, "Ruter"@no ;
+    rdfs:comment "Network router"@en .
+
+ict:Switch a rdfs:Class ;
+    rdfs:subClassOf ict:NetworkEquipment ;
+    rdfs:label "Switch"@en, "Svitsj"@no ;
+    rdfs:comment "Network switch"@en .
+
+ict:AccessPoint a rdfs:Class ;
+    rdfs:subClassOf ict:NetworkEquipment ;
+    rdfs:label "Access Point"@en, "Aksesspunkt"@no ;
+    skos:altLabel "Wireless Access Point"@en ;
+    rdfs:comment "Wireless access point"@en .
+
+ict:Firewall a rdfs:Class ;
+    rdfs:subClassOf ict:NetworkEquipment ;
+    rdfs:label "Firewall"@en, "Brannmur"@no ;
+    rdfs:comment "Network firewall appliance"@en .
+
+# ===================================================================
+# Property Definitions - Common (all IT equipment)
+# ===================================================================
+
+ict:manufacturer a rdf:Property ;
+    rdfs:label "Manufacturer"@en, "Produsent"@no ;
+    rdfs:domain ict:InformationTechnology ;
+    rdfs:range common:Manufacturer .
+
+ict:model a rdf:Property ;
+    rdfs:label "Model"@en, "Modell"@no ;
+    rdfs:domain ict:InformationTechnology ;
+    rdfs:range common:Model .
+
+ict:serialNumber a rdf:Property ;
+    rdfs:label "Serial Number"@en, "Serienummer"@no ;
+    rdfs:domain ict:InformationTechnology ;
+    rdfs:range xsd:string .
+
+ict:purchaseDate a rdf:Property ;
+    rdfs:label "Purchase Date"@en, "Kjøpsdato"@no ;
+    rdfs:domain ict:InformationTechnology ;
+    rdfs:range xsd:date .
+
+ict:warrantyExpiry a rdf:Property ;
+    rdfs:label "Warranty Expiry"@en, "Garanti utløper"@no ;
+    rdfs:domain ict:InformationTechnology ;
+    rdfs:range xsd:date .
+
+# ===================================================================
+# Property Definitions - Computer specific
+# ===================================================================
+
+ict:operatingSystem a rdf:Property ;
+    rdfs:label "Operating System"@en, "Operativsystem"@no ;
+    rdfs:domain ict:Computer ;
+    rdfs:range xsd:string .
+
+ict:cpu a rdf:Property ;
+    rdfs:label "CPU"@en, "Prosessor"@no ;
+    rdfs:domain ict:Computer ;
+    rdfs:range xsd:string .
+
+ict:ramGb a rdf:Property ;
+    rdfs:label "RAM (GB)"@en, "Minne (GB)"@no ;
+    rdfs:domain ict:Computer ;
+    rdfs:range xsd:integer .
+
+ict:storageGb a rdf:Property ;
+    rdfs:label "Storage (GB)"@en, "Lagring (GB)"@no ;
+    rdfs:domain ict:Computer ;
+    rdfs:range xsd:integer .
+
+# ===================================================================
+# Property Definitions - Network Equipment specific
+# ===================================================================
+
+ict:ipAddress a rdf:Property ;
+    rdfs:label "IP Address"@en, "IP-adresse"@no ;
+    rdfs:domain ict:NetworkEquipment ;
+    rdfs:range xsd:string .
+
+ict:macAddress a rdf:Property ;
+    rdfs:label "MAC Address"@en, "MAC-adresse"@no ;
+    rdfs:domain ict:NetworkEquipment ;
+    rdfs:range xsd:string .
+
+ict:portCount a rdf:Property ;
+    rdfs:label "Port Count"@en, "Antall porter"@no ;
+    rdfs:domain ict:NetworkEquipment ;
+    rdfs:range xsd:integer .
+
+# ===================================================================
+# Property Definitions - Network (logical grouping) specific
+# ===================================================================
+
+ict:subnet a rdf:Property ;
+    rdfs:label "Subnet"@en, "Subnett"@no ;
+    rdfs:comment "Subnet in CIDR notation, e.g. 10.0.1.0/24"@en ;
+    rdfs:domain ict:Network ;
+    rdfs:range xsd:string .
+
+ict:vlanId a rdf:Property ;
+    rdfs:label "VLAN ID"@en, "VLAN-ID"@no ;
+    rdfs:domain ict:Network ;
+    rdfs:range xsd:integer .
+
+ict:gateway a rdf:Property ;
+    rdfs:label "Gateway"@en, "Gateway"@no ;
+    rdfs:domain ict:Network ;
+    rdfs:range xsd:string .
+
+# ===================================================================
+# Cross-cutting property domain extensions
+#
+# Opt IT equipment into the common per-year asset valuation (formuesverdi).
+# The property + range marker live in common-taxonomy.
+# ===================================================================
+
+common:assetValue schema:domainIncludes ict:InformationTechnology .
