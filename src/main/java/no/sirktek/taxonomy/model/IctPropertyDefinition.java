@@ -7,7 +7,11 @@ package no.sirktek.taxonomy.model;
  * common ranges (e.g. {@code common:AssetValueEntry}) are resolved upstream by
  * {@code CommonPropertyDefinition} and are not handled here.
  */
-public class IctPropertyDefinition {
+public final class IctPropertyDefinition {
+
+    private IctPropertyDefinition() {
+        // Utility class — not instantiable.
+    }
 
     /**
      * Convert an RDF range type to the ICT {@link PropertyType} equivalent.

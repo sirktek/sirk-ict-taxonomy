@@ -3,7 +3,7 @@ package no.sirktek.taxonomy;
 import no.sirktek.taxonomy.loader.IctRdfsTaxonomyLoader;
 
 /**
- * Main service for accessing the ICT (information & communications technology)
+ * Main service for accessing the ICT (information and communications technology)
  * taxonomy data.
  */
 public class IctTaxonomyService extends TaxonomyService {
