@@ -1,22 +1,30 @@
 # sirk-ict-taxonomy
 
-RDF-S based **ICT (information & communications technology) taxonomy** with a Java API — IT equipment (computers, network equipment) plus a logical **Network** grouping root.
+RDF-S based **ICT (information & communications technology) taxonomy** with a Java API, organized under three roots: **Hardware**, **Software** and a logical **Network** grouping.
 
 Extracted from `sirk-machine-taxonomy` in the 3.x line so IT assets live in their own domain taxonomy rather than under `machine:`.
 
 ## Structure
 
 ```
-ict:InformationTechnology            (root)  "IT Equipment" / "IT-utstyr"
-├─ ict:Computer (PC)                 → Desktop, Laptop, Server
-├─ ict:NetworkEquipment              → Router, Switch, AccessPoint, Firewall   ("Network equipment")
-└─ ict:Network                       a logical network grouping (NOT a device) — org-specific
-                                       networks ("HQ Network") that equipment belongs to
+ict:Hardware   "Hardware" / "Maskinvare"     (root)
+├─ ict:Computer                → Desktop, Laptop, Server   (covers servers too)
+├─ ict:NetworkEquipment        → Router, Switch, AccessPoint, Firewall   ("network equipment" — physical devices)
+└─ ict:Peripheral              → Monitor, Printer
+
+ict:Software   "Software" / "Programvare"    (root)
+├─ ict:Application
+├─ ict:OperatingSystem
+└─ ict:SoftwareLicense
+
+ict:Network    "Network" / "Nettverk"        (root)
+   a logical network grouping (NOT a device) — tenants create org-specific
+   subcategories ("HQ Network") that equipment belongs to
 ```
 
-`ict:Network` is deliberately **separate from `ict:NetworkEquipment`**: the former is a logical grouping (tenants create org-specific subcategories under it to document a network and its layout — subnet/VLAN/gateway — in one place); the latter is the physical device type.
+`ict:Network` is deliberately **separate from `ict:NetworkEquipment`**: the former is a logical grouping (tenants create org-specific subcategories under it to document a network and its layout — subnet/VLAN/gateway — in one place); the latter is the physical device type under Hardware.
 
-Cross-cutting `common:assetValue` (formuesverdi) is extended to `ict:InformationTechnology`.
+Shared properties (`manufacturer`, `model`, `purchaseDate`) span Hardware and Software via `schema:domainIncludes`. Cross-cutting `common:assetValue` (formuesverdi) is extended to `ict:Hardware` and `ict:Software`.
 
 - **Namespace:** `http://taxonomy.sirktek.no/ict#`
 - **Depends on:** `no.sirktek:taxonomy-commons` (Manufacturer/Model + assetValue)
@@ -32,6 +40,7 @@ Cross-cutting `common:assetValue` (formuesverdi) is extended to `ict:Information
 ```java
 IctTaxonomyService svc = new IctTaxonomyService();
 TaxonomyTree tree = svc.loadBaseTaxonomy();
+Optional<CategoryInfo> hardware = svc.getCategoryByClassName("Hardware");
 Optional<CategoryInfo> network = svc.getCategoryByClassName("Network");
 ```
 
