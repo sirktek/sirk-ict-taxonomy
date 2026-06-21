@@ -28,46 +28,52 @@ class TaxonomyServiceTest {
     }
 
     @Test
-    void shouldFindInformationTechnologyRoot() {
-        Optional<CategoryInfo> it = taxonomyService.getCategoryByClassName("InformationTechnology");
-
-        assertTrue(it.isPresent());
-        assertEquals("InformationTechnology", it.get().className());
-        assertTrue(it.get().uri().startsWith("http://taxonomy.sirktek.no/ict#"));
-    }
-
-    @Test
-    void shouldFindLevel1Categories() {
-        for (String className : new String[]{"Computer", "NetworkEquipment", "Network"}) {
-            assertTrue(taxonomyService.getCategoryByClassName(className).isPresent(),
-                    "Expected level-1 category present: " + className);
+    void shouldExposeThreeTopLevelRoots() {
+        for (String className : new String[]{"Hardware", "Software", "Network"}) {
+            Optional<CategoryInfo> root = taxonomyService.getCategoryByClassName(className);
+            assertTrue(root.isPresent(), "Expected root present: " + className);
+            assertEquals(className, root.get().className());
+            assertTrue(root.get().isRoot(), className + " should be a top-level root");
         }
     }
 
     @Test
     void shouldDistinguishNetworkGroupingFromNetworkEquipment() {
-        // The logical "Network" grouping is a separate class from the
-        // "NetworkEquipment" device type.
+        // The logical "Network" grouping root is separate from the
+        // "NetworkEquipment" device type (which lives under Hardware).
         assertTrue(taxonomyService.getCategoryByClassName("Network").isPresent());
-        assertTrue(taxonomyService.getCategoryByClassName("NetworkEquipment").isPresent());
+        Optional<CategoryInfo> equipment = taxonomyService.getCategoryByClassName("NetworkEquipment");
+        assertTrue(equipment.isPresent());
+        assertEquals("Hardware", equipment.get().parentClassName());
         assertNotEquals(
                 taxonomyService.getCategoryByClassName("Network").orElseThrow().uri(),
-                taxonomyService.getCategoryByClassName("NetworkEquipment").orElseThrow().uri());
+                equipment.get().uri());
     }
 
     @Test
-    void shouldFindComputerSubcategories() {
-        assertTrue(taxonomyService.getCategoryByClassName("Desktop").isPresent());
-        assertTrue(taxonomyService.getCategoryByClassName("Laptop").isPresent());
-        assertTrue(taxonomyService.getCategoryByClassName("Server").isPresent());
-    }
-
-    @Test
-    void shouldFindNetworkEquipmentSubcategories() {
-        for (String className : new String[]{"Router", "Switch", "AccessPoint", "Firewall"}) {
+    void shouldFindHardwareSubcategories() {
+        for (String className : new String[]{
+                "Computer", "Desktop", "Laptop", "Server",
+                "NetworkEquipment", "Router", "Switch", "AccessPoint", "Firewall",
+                "Peripheral", "Monitor", "Printer"}) {
             assertTrue(taxonomyService.getCategoryByClassName(className).isPresent(),
-                    "Expected NetworkEquipment subcategory present: " + className);
+                    "Expected Hardware subcategory present: " + className);
         }
+    }
+
+    @Test
+    void shouldFindSoftwareSubcategories() {
+        for (String className : new String[]{"Application", "OperatingSystem", "SoftwareLicense"}) {
+            assertTrue(taxonomyService.getCategoryByClassName(className).isPresent(),
+                    "Expected Software subcategory present: " + className);
+        }
+    }
+
+    @Test
+    void computerHasNoPcAltLabel() {
+        CategoryInfo computer = taxonomyService.getCategoryByClassName("Computer").orElseThrow();
+        assertFalse(computer.englishAltLabels().contains("PC"),
+                "Computer should not carry a 'PC' alt-label (it also covers servers)");
     }
 
     @Test

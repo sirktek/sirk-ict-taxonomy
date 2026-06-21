@@ -1,6 +1,7 @@
 # ICT Taxonomy Base Schema in RDF-S (Turtle format)
-# Information & Communications Technology equipment (PCs, network gear) plus a
-# logical "Network" grouping root. Extracted from the machine taxonomy in 3.x.
+# Information & communications technology, organized under three roots:
+# Hardware, Software and a logical Network grouping. Extracted from the
+# machine taxonomy in 3.x.
 
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
@@ -12,41 +13,32 @@
 @prefix common:  <http://taxonomy.sirktek.no/common#> .
 
 # ===================================================================
-# Root Class
+# Root Classes
 # ===================================================================
 
-ict:InformationTechnology a rdfs:Class ;
-    rdfs:label "IT Equipment"@en, "IT-utstyr"@no ;
-    skos:altLabel "Information Technology"@en, "ICT"@en ;
-    rdfs:comment "Root class for information & communications technology equipment (computers, network equipment, ...)"@en .
+ict:Hardware a rdfs:Class ;
+    rdfs:label "Hardware"@en, "Maskinvare"@no ;
+    rdfs:comment "Physical IT hardware: computers, network devices and peripherals"@en .
+
+ict:Software a rdfs:Class ;
+    rdfs:label "Software"@en, "Programvare"@no ;
+    rdfs:comment "Software assets: applications, operating systems and licenses"@en .
+
+# Logical network grouping (NOT a device — that is ict:NetworkEquipment under
+# Hardware). Tenants create org-specific subcategories here (e.g. "HQ Network")
+# that equipment belongs to, documenting layout/subnets in one place.
+ict:Network a rdfs:Class ;
+    rdfs:label "Network"@en, "Nettverk"@no ;
+    rdfs:comment "A logical network grouping: an org-specific network that equipment belongs to"@en .
 
 # ===================================================================
-# Level 1 Categories
+# Hardware subcategories
 # ===================================================================
 
 ict:Computer a rdfs:Class ;
-    rdfs:subClassOf ict:InformationTechnology ;
+    rdfs:subClassOf ict:Hardware ;
     rdfs:label "Computer"@en, "Datamaskin"@no ;
-    skos:altLabel "PC"@en, "PC"@no ;
-    rdfs:comment "Personal computers and servers (desktop, laptop, server)"@en .
-
-ict:NetworkEquipment a rdfs:Class ;
-    rdfs:subClassOf ict:InformationTechnology ;
-    rdfs:label "Network Equipment"@en, "Nettverksutstyr"@no ;
-    skos:altLabel "Networking Equipment"@en ;
-    rdfs:comment "Physical networking devices: routers, switches, access points, firewalls"@en .
-
-# Logical "Network" grouping root — DISTINCT from NetworkEquipment.
-# Tenants create org-specific subcategories here (e.g. "HQ Network") that
-# assets belong to, to document a network and its layout in one place.
-ict:Network a rdfs:Class ;
-    rdfs:subClassOf ict:InformationTechnology ;
-    rdfs:label "Network"@en, "Nettverk"@no ;
-    rdfs:comment "A logical network grouping (not a device): an org-specific network that equipment belongs to, documenting layout/subnets in one place"@en .
-
-# ===================================================================
-# Level 2 Categories - Computers
-# ===================================================================
+    rdfs:comment "Computers including desktops, laptops and servers"@en .
 
 ict:Desktop a rdfs:Class ;
     rdfs:subClassOf ict:Computer ;
@@ -63,9 +55,11 @@ ict:Server a rdfs:Class ;
     rdfs:label "Server"@en, "Server"@no ;
     rdfs:comment "Server computer"@en .
 
-# ===================================================================
-# Level 2 Categories - Network Equipment
-# ===================================================================
+ict:NetworkEquipment a rdfs:Class ;
+    rdfs:subClassOf ict:Hardware ;
+    rdfs:label "Network Equipment"@en, "Nettverksutstyr"@no ;
+    skos:altLabel "Networking Equipment"@en ;
+    rdfs:comment "Physical networking devices: routers, switches, access points, firewalls"@en .
 
 ict:Router a rdfs:Class ;
     rdfs:subClassOf ict:NetworkEquipment ;
@@ -88,39 +82,78 @@ ict:Firewall a rdfs:Class ;
     rdfs:label "Firewall"@en, "Brannmur"@no ;
     rdfs:comment "Network firewall appliance"@en .
 
+ict:Peripheral a rdfs:Class ;
+    rdfs:subClassOf ict:Hardware ;
+    rdfs:label "Peripheral"@en, "Tilleggsutstyr"@no ;
+    rdfs:comment "Peripheral hardware such as monitors and printers"@en .
+
+ict:Monitor a rdfs:Class ;
+    rdfs:subClassOf ict:Peripheral ;
+    rdfs:label "Monitor"@en, "Skjerm"@no ;
+    rdfs:comment "Display/monitor"@en .
+
+ict:Printer a rdfs:Class ;
+    rdfs:subClassOf ict:Peripheral ;
+    rdfs:label "Printer"@en, "Skriver"@no ;
+    rdfs:comment "Printer"@en .
+
 # ===================================================================
-# Property Definitions - Common (all IT equipment)
+# Software subcategories
+# ===================================================================
+
+ict:Application a rdfs:Class ;
+    rdfs:subClassOf ict:Software ;
+    rdfs:label "Application"@en, "Applikasjon"@no ;
+    rdfs:comment "Software application"@en .
+
+ict:OperatingSystem a rdfs:Class ;
+    rdfs:subClassOf ict:Software ;
+    rdfs:label "Operating System"@en, "Operativsystem"@no ;
+    rdfs:comment "Operating system software"@en .
+
+ict:SoftwareLicense a rdfs:Class ;
+    rdfs:subClassOf ict:Software ;
+    rdfs:label "Software License"@en, "Programvarelisens"@no ;
+    rdfs:comment "A software license or subscription held as an asset"@en .
+
+# ===================================================================
+# Property Definitions - Hardware + Software (shared)
 # ===================================================================
 
 ict:manufacturer a rdf:Property ;
     rdfs:label "Manufacturer"@en, "Produsent"@no ;
-    rdfs:domain ict:InformationTechnology ;
+    skos:altLabel "Vendor"@en ;
+    schema:domainIncludes ict:Hardware ;
+    schema:domainIncludes ict:Software ;
     rdfs:range common:Manufacturer .
 
 ict:model a rdf:Property ;
     rdfs:label "Model"@en, "Modell"@no ;
-    rdfs:domain ict:InformationTechnology ;
+    schema:domainIncludes ict:Hardware ;
+    schema:domainIncludes ict:Software ;
     rdfs:range common:Model .
-
-ict:serialNumber a rdf:Property ;
-    rdfs:label "Serial Number"@en, "Serienummer"@no ;
-    rdfs:domain ict:InformationTechnology ;
-    rdfs:range xsd:string .
 
 ict:purchaseDate a rdf:Property ;
     rdfs:label "Purchase Date"@en, "Kjøpsdato"@no ;
-    rdfs:domain ict:InformationTechnology ;
+    schema:domainIncludes ict:Hardware ;
+    schema:domainIncludes ict:Software ;
     rdfs:range xsd:date .
+
+# ===================================================================
+# Property Definitions - Hardware specific
+# ===================================================================
+
+ict:serialNumber a rdf:Property ;
+    rdfs:label "Serial Number"@en, "Serienummer"@no ;
+    rdfs:domain ict:Hardware ;
+    rdfs:range xsd:string .
 
 ict:warrantyExpiry a rdf:Property ;
     rdfs:label "Warranty Expiry"@en, "Garanti utløper"@no ;
-    rdfs:domain ict:InformationTechnology ;
+    rdfs:domain ict:Hardware ;
     rdfs:range xsd:date .
 
-# ===================================================================
-# Property Definitions - Computer specific
-# ===================================================================
-
+# Computer specific
 ict:operatingSystem a rdf:Property ;
     rdfs:label "Operating System"@en, "Operativsystem"@no ;
     rdfs:domain ict:Computer ;
@@ -141,10 +174,7 @@ ict:storageGb a rdf:Property ;
     rdfs:domain ict:Computer ;
     rdfs:range xsd:integer .
 
-# ===================================================================
-# Property Definitions - Network Equipment specific
-# ===================================================================
-
+# Network equipment specific
 ict:ipAddress a rdf:Property ;
     rdfs:label "IP Address"@en, "IP-adresse"@no ;
     rdfs:domain ict:NetworkEquipment ;
@@ -159,6 +189,25 @@ ict:portCount a rdf:Property ;
     rdfs:label "Port Count"@en, "Antall porter"@no ;
     rdfs:domain ict:NetworkEquipment ;
     rdfs:range xsd:integer .
+
+# ===================================================================
+# Property Definitions - Software specific
+# ===================================================================
+
+ict:version a rdf:Property ;
+    rdfs:label "Version"@en, "Versjon"@no ;
+    rdfs:domain ict:Software ;
+    rdfs:range xsd:string .
+
+ict:licenseCount a rdf:Property ;
+    rdfs:label "License Count"@en, "Antall lisenser"@no ;
+    rdfs:domain ict:Software ;
+    rdfs:range xsd:integer .
+
+ict:licenseExpiry a rdf:Property ;
+    rdfs:label "License Expiry"@en, "Lisens utløper"@no ;
+    rdfs:domain ict:Software ;
+    rdfs:range xsd:date .
 
 # ===================================================================
 # Property Definitions - Network (logical grouping) specific
@@ -183,8 +232,9 @@ ict:gateway a rdf:Property ;
 # ===================================================================
 # Cross-cutting property domain extensions
 #
-# Opt IT equipment into the common per-year asset valuation (formuesverdi).
-# The property + range marker live in common-taxonomy.
+# Opt hardware and software into the common per-year asset valuation
+# (formuesverdi). The property + range marker live in common-taxonomy.
 # ===================================================================
 
-common:assetValue schema:domainIncludes ict:InformationTechnology .
+common:assetValue schema:domainIncludes ict:Hardware .
+common:assetValue schema:domainIncludes ict:Software .
