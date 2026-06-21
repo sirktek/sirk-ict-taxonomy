@@ -22,7 +22,7 @@ ict:Network    "Network" / "Nettverk"        (root)
    subcategories ("HQ Network") that equipment belongs to
 ```
 
-`ict:Network` is deliberately **separate from `ict:NetworkEquipment`**: the former is a logical grouping (tenants create org-specific subcategories under it to document a network and its layout — subnet/VLAN/gateway — in one place); the latter is the physical device type under Hardware.
+`ict:Network` is deliberately **separate from `ict:NetworkEquipment`**: the former is a logical grouping (tenants create org-specific subcategories under it to document a network and its layout — `cidr`/VLAN/gateway — in one place); the latter is the physical device type under Hardware. Hardware carries a multi-valued `network` property (`MULTI_CATEGORY`, range `ict:Network`) so a device can belong to several networks; membership is realized as the asset's category memberships filtered to the `ict:Network` subtree.
 
 Shared properties (`manufacturer`, `model`, `purchaseDate`) span Hardware and Software via `schema:domainIncludes`. Cross-cutting `common:assetValue` (formuesverdi) is extended to `ict:Hardware` and `ict:Software`.
 

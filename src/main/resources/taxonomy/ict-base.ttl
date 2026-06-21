@@ -153,6 +153,17 @@ ict:warrantyExpiry a rdf:Property ;
     rdfs:domain ict:Hardware ;
     rdfs:range xsd:date .
 
+# Networks this hardware belongs to. Multi-valued reference into the logical
+# ict:Network grouping — a device (router/switch/server/...) can be on many
+# networks. Realized as the asset's category memberships (categoryIds) filtered
+# to the ict:Network subtree.
+ict:network a rdf:Property ;
+    rdfs:label "Networks"@en, "Nettverk"@no ;
+    rdfs:comment "Logical networks this hardware belongs to (multi-select of ict:Network categories)"@en ;
+    rdfs:domain ict:Hardware ;
+    rdfs:range ict:Network ;
+    common:multiValued true .
+
 # Computer specific
 ict:operatingSystem a rdf:Property ;
     rdfs:label "Operating System"@en, "Operativsystem"@no ;
@@ -213,9 +224,9 @@ ict:licenseExpiry a rdf:Property ;
 # Property Definitions - Network (logical grouping) specific
 # ===================================================================
 
-ict:subnet a rdf:Property ;
-    rdfs:label "Subnet"@en, "Subnett"@no ;
-    rdfs:comment "Subnet in CIDR notation, e.g. 10.0.1.0/24"@en ;
+ict:cidr a rdf:Property ;
+    rdfs:label "CIDR"@en, "CIDR"@no ;
+    rdfs:comment "Network address range in CIDR notation, e.g. 10.0.1.0/24"@en ;
     rdfs:domain ict:Network ;
     rdfs:range xsd:string .
 

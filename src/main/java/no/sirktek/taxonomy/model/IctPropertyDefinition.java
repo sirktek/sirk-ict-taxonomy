@@ -34,8 +34,14 @@ public final class IctPropertyDefinition {
             case "http://www.w3.org/2001/XMLSchema#boolean" -> PropertyType.BOOLEAN;
             case "http://www.w3.org/2001/XMLSchema#anyURI"  -> PropertyType.URL;
             default -> {
-                if (rangeType.contains("Manufacturer") || rangeType.contains("Model")) {
-                    yield PropertyType.CATEGORY;
+                // A category reference: range is a common Manufacturer/Model or
+                // an ict:* class (e.g. ict:Network). Multi-valued (common:multiValued)
+                // ⇒ MULTI_CATEGORY, otherwise a single CATEGORY reference.
+                boolean categoryRef = rangeType.startsWith("http://taxonomy.sirktek.no/ict#")
+                        || rangeType.contains("Manufacturer")
+                        || rangeType.contains("Model");
+                if (categoryRef) {
+                    yield propertyDef.multiValued() ? PropertyType.MULTI_CATEGORY : PropertyType.CATEGORY;
                 }
                 yield PropertyType.STRING;
             }
@@ -58,7 +64,9 @@ public final class IctPropertyDefinition {
         BOOLEAN,
         /** URL property type */
         URL,
-        /** Category reference property type */
-        CATEGORY
+        /** Single category reference property type */
+        CATEGORY,
+        /** Multi-valued category reference property type */
+        MULTI_CATEGORY
     }
 }

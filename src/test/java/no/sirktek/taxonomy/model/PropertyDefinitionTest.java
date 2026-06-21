@@ -11,6 +11,10 @@ class PropertyDefinitionTest {
         return PropertyDefinition.builder().name(name).rangeType(rangeType).build();
     }
 
+    private static PropertyDefinition prop(String name, String rangeType, boolean multiValued) {
+        return PropertyDefinition.builder().name(name).rangeType(rangeType).multiValued(multiValued).build();
+    }
+
     @Test
     void detectsStringRange() {
         assertEquals(IctPropertyDefinition.PropertyType.STRING,
@@ -44,12 +48,24 @@ class PropertyDefinitionTest {
     }
 
     @Test
+    void detectsSingleCategoryForIctClassRange() {
+        assertEquals(IctPropertyDefinition.PropertyType.CATEGORY,
+                getPropertyType(prop("net", "http://taxonomy.sirktek.no/ict#Network")));
+    }
+
+    @Test
+    void detectsMultiCategoryForMultiValuedIctClassRange() {
+        assertEquals(IctPropertyDefinition.PropertyType.MULTI_CATEGORY,
+                getPropertyType(prop("network", "http://taxonomy.sirktek.no/ict#Network", true)));
+    }
+
+    @Test
     void nullRangeFallsBackToString() {
         assertEquals(IctPropertyDefinition.PropertyType.STRING, getPropertyType(prop("x", null)));
     }
 
     @Test
     void shouldExposeExpectedPropertyTypeEnumValues() {
-        assertEquals(7, IctPropertyDefinition.PropertyType.values().length);
+        assertEquals(8, IctPropertyDefinition.PropertyType.values().length);
     }
 }
