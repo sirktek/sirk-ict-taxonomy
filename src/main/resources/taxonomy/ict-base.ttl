@@ -9,7 +9,7 @@
 @prefix schema:  <https://schema.org/> .
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix ict:     <http://taxonomy.sirktek.no/ict#> .
-# Cross-cutting classes/properties (Manufacturer, Model, assetValue, ...)
+# Cross-cutting classes/properties (Manufacturer, Model, bookValue, ...)
 @prefix common:  <http://taxonomy.sirktek.no/common#> .
 
 # ===================================================================
@@ -243,9 +243,22 @@ ict:gateway a rdf:Property ;
 # ===================================================================
 # Cross-cutting property domain extensions
 #
-# Opt hardware and software into the common per-year asset valuation
-# (formuesverdi). The property + range marker live in common-taxonomy.
+# Opt hardware and software into the common accounting properties. The
+# properties and their range marker live in common-taxonomy.
+#
+# No wealthTaxValue (formuesverdi) opt-in: for driftsmidler the wealth-tax
+# value is by rule the tax written-down value (taxValue) at 31 December,
+# so the consumer derives it rather than storing it.
 # ===================================================================
 
-common:assetValue schema:domainIncludes ict:Hardware .
-common:assetValue schema:domainIncludes ict:Software .
+# Accounting and tax properties (ledger account, per-year book value and
+# tax value, tax depreciation group). Typical group for ICT equipment is a
+# (kontormaskiner o.l.). Chosen per category/asset by the consumer.
+common:ledgerAccount schema:domainIncludes ict:Hardware .
+common:ledgerAccount schema:domainIncludes ict:Software .
+common:bookValue schema:domainIncludes ict:Hardware .
+common:bookValue schema:domainIncludes ict:Software .
+common:taxValue schema:domainIncludes ict:Hardware .
+common:taxValue schema:domainIncludes ict:Software .
+common:depreciationGroup schema:domainIncludes ict:Hardware .
+common:depreciationGroup schema:domainIncludes ict:Software .
