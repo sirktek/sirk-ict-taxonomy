@@ -29,20 +29,20 @@ it), `.github/workflows/build_tag_and_release.yml`,
 new `.github/workflows/publish_maven_central.yml`, `README.md`.
 Tests: `mvnq test -Dtest='CommonPropertyOptInTest,TaxonomyServiceTest'`
 
-- [ ] 1.1 Test first: rewrite `CommonPropertyOptInTest` on `IctTaxonomyService` (D3); replace
+- [x] 1.1 Test first: rewrite `CommonPropertyOptInTest` on `IctTaxonomyService` (D3); replace
       `shouldExposeThreeTopLevelRoots` with `ictIsTheSingleRoot` and
       `hardwareSoftwareAndNetworkSitUnderIct`, make `allClassUrisAreInIctNamespace` recursive
       (D3). Bump `taxonomy-commons` to `3.14` in `pom.xml`. Run: the root tests fail, and the
       commons tests fail on `ledgerAccount` / `depreciationGroup` on Hardware and Software.
-- [ ] 1.2 `ict-base.ttl`: add `ict:ICT` and the three `rdfs:subClassOf ict:ICT` (D1); delete the
+- [x] 1.2 `ict-base.ttl`: add `ict:ICT` and the three `rdfs:subClassOf ict:ICT` (D1); delete the
       accounting block (D2); fix the header comments (D1). Fix the `pom.xml` and
       `IctPropertyDefinition` comments (D2). Group tests pass.
-- [ ] 1.3 CI (D4): remove the Central steps from `build_tag_and_release.yml` and fix the
+- [x] 1.3 CI (D4): remove the Central steps from `build_tag_and_release.yml` and fix the
       SNAPSHOT message; add `publish_maven_central.yml`. Diff both against
       `/home/mkf/dev/sirk-taxonomy-commons/.github/workflows/` (and sirk-machine-taxonomy's, if
       landed) and keep only the D4 differences; `actionlint` if installed.
-- [ ] 1.4 README: structure and accounting paragraph (D5), "Releases" (D4).
-- [ ] 1.5 `mvnq test` once (full suite).
+- [x] 1.4 README: structure and accounting paragraph (D5), "Releases" (D4).
+- [x] 1.5 `mvnq test` once (full suite).
 
 ## Not in scope
 

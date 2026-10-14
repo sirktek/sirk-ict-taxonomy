@@ -4,7 +4,7 @@ package no.sirktek.taxonomy.model;
  * ICT-specific property definition with type detection.
  *
  * Maps the {@code ict:*} property ranges to a {@link PropertyType}. Cross-cutting
- * common ranges (e.g. {@code common:AssetValueEntry}) are resolved upstream by
+ * common ranges (e.g. {@code common:AssetValuationEntry}) are resolved upstream by
  * {@code CommonPropertyDefinition} and are not handled here.
  */
 public final class IctPropertyDefinition {

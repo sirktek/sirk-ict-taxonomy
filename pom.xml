@@ -50,12 +50,12 @@
     </properties>
 
     <dependencies>
-        <!-- Sirktek Taxonomy Commons (v3.x ships Manufacturer/Model referenced
-             by ict:manufacturer / ict:model and the cross-cutting assetValue). -->
+        <!-- Sirktek Taxonomy Commons: Manufacturer/Model referenced by
+             ict:manufacturer / ict:model; its loader merges common-base.ttl. -->
         <dependency>
             <groupId>no.sirktek</groupId>
             <artifactId>taxonomy-commons</artifactId>
-            <version>3.13</version>
+            <version>3.14</version>
         </dependency>
 
         <!-- Lombok for reducing boilerplate -->
