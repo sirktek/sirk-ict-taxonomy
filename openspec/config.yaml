@@ -1,0 +1,18 @@
+schema: spec-driven
+
+context: |
+  sirk-ict-taxonomy: Java 17 library (Apache Jena, Lombok, JUnit 5) holding Sirktek's ICT
+  (information and communications technology) taxonomy in RDF-S
+  (src/main/resources/taxonomy/ict-base.ttl, namespace http://taxonomy.sirktek.no/ict#).
+  IctRdfsTaxonomyLoader extends RdfsTaxonomyLoader from sirk-taxonomy-commons (resolved from
+  GitHub Packages); since commons 3.14 the loader merges common-base.ttl, so
+  `common:<p> schema:domainIncludes ict:<Class>` opt-ins attach. Category ids are derived from
+  class URIs (RdfsCategoryIds). Released as 3.<build> on merge to main to GitHub Packages;
+  Maven Central by hand. Consumers: sirk-orgadmin-backend (library, lists the ICT root class
+  names in TaxonomyServiceProducer) and sirk-mcp-server (serves ict-base.ttl as schema).
+  Maven goes through `mvnq` (same arguments as ./mvnw), never `clean`.
+  Taxonomies are data: no Java code specific to a class or property.
+
+rules:
+  tasks:
+    - "Group tasks as ### Group N: <name>, each listing the files it may touch and its test command."

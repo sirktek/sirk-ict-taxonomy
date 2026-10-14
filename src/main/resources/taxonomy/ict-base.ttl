@@ -1,6 +1,6 @@
 # ICT Taxonomy Base Schema in RDF-S (Turtle format)
-# Information & communications technology, organized under three roots:
-# Hardware, Software and a logical Network grouping. Extracted from the
+# Information & communications technology, organized under one root, ICT, with
+# Hardware, Software and a logical Network grouping below it. Extracted from the
 # machine taxonomy in 3.x.
 
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -9,18 +9,28 @@
 @prefix schema:  <https://schema.org/> .
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 @prefix ict:     <http://taxonomy.sirktek.no/ict#> .
-# Cross-cutting classes/properties (Manufacturer, Model, bookValue, ...)
+# Cross-cutting classes (Manufacturer, Model, ...)
 @prefix common:  <http://taxonomy.sirktek.no/common#> .
 
 # ===================================================================
-# Root Classes
+# Root Class
+# ===================================================================
+
+ict:ICT a rdfs:Class ;
+    rdfs:label "ICT"@en, "IKT"@no ;
+    rdfs:comment "Root class for all ICT assets"@en .
+
+# ===================================================================
+# Top-level ICT subcategories
 # ===================================================================
 
 ict:Hardware a rdfs:Class ;
+    rdfs:subClassOf ict:ICT ;
     rdfs:label "Hardware"@en, "Maskinvare"@no ;
     rdfs:comment "Physical IT hardware: computers, network devices and peripherals"@en .
 
 ict:Software a rdfs:Class ;
+    rdfs:subClassOf ict:ICT ;
     rdfs:label "Software"@en, "Programvare"@no ;
     rdfs:comment "Software assets: applications, operating systems and licenses"@en .
 
@@ -28,6 +38,7 @@ ict:Software a rdfs:Class ;
 # Hardware). Tenants create org-specific subcategories here (e.g. "HQ Network")
 # that equipment belongs to, documenting layout/subnets in one place.
 ict:Network a rdfs:Class ;
+    rdfs:subClassOf ict:ICT ;
     rdfs:label "Network"@en, "Nettverk"@no ;
     rdfs:comment "A logical network grouping: an org-specific network that equipment belongs to"@en .
 
@@ -239,26 +250,3 @@ ict:gateway a rdf:Property ;
     rdfs:label "Gateway"@en, "Gateway"@no ;
     rdfs:domain ict:Network ;
     rdfs:range xsd:string .
-
-# ===================================================================
-# Cross-cutting property domain extensions
-#
-# Opt hardware and software into the common accounting properties. The
-# properties and their range marker live in common-taxonomy.
-#
-# No wealthTaxValue (formuesverdi) opt-in: for driftsmidler the wealth-tax
-# value is by rule the tax written-down value (taxValue) at 31 December,
-# so the consumer derives it rather than storing it.
-# ===================================================================
-
-# Accounting and tax properties (ledger account, per-year book value and
-# tax value, tax depreciation group). Typical group for ICT equipment is a
-# (kontormaskiner o.l.). Chosen per category/asset by the consumer.
-common:ledgerAccount schema:domainIncludes ict:Hardware .
-common:ledgerAccount schema:domainIncludes ict:Software .
-common:bookValue schema:domainIncludes ict:Hardware .
-common:bookValue schema:domainIncludes ict:Software .
-common:taxValue schema:domainIncludes ict:Hardware .
-common:taxValue schema:domainIncludes ict:Software .
-common:depreciationGroup schema:domainIncludes ict:Hardware .
-common:depreciationGroup schema:domainIncludes ict:Software .

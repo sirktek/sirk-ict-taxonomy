@@ -28,12 +28,23 @@ class TaxonomyServiceTest {
     }
 
     @Test
-    void shouldExposeThreeTopLevelRoots() {
+    void ictIsTheSingleRoot() {
+        var roots = taxonomyService.loadBaseTaxonomy().rootCategories();
+        assertEquals(1, roots.size());
+        assertEquals("ICT", roots.get(0).className());
+        assertEquals("ICT", roots.get(0).englishName());
+        assertEquals("IKT", roots.get(0).norwegianName());
+    }
+
+    @Test
+    void hardwareSoftwareAndNetworkSitUnderIct() {
+        CategoryInfo ict = taxonomyService.getCategoryByClassName("ICT").orElseThrow();
         for (String className : new String[]{"Hardware", "Software", "Network"}) {
-            Optional<CategoryInfo> root = taxonomyService.getCategoryByClassName(className);
-            assertTrue(root.isPresent(), "Expected root present: " + className);
-            assertEquals(className, root.get().className());
-            assertTrue(root.get().isRoot(), className + " should be a top-level root");
+            CategoryInfo c = taxonomyService.getCategoryByClassName(className).orElseThrow();
+            assertEquals("ICT", c.parentClassName());
+            assertFalse(c.isRoot(), className + " should not be a root");
+            assertTrue(ict.children().stream().anyMatch(ch -> className.equals(ch.className())),
+                    className + " should be among ICT's children");
         }
     }
 
@@ -78,10 +89,13 @@ class TaxonomyServiceTest {
 
     @Test
     void allClassUrisAreInIctNamespace() {
-        for (CategoryInfo cat : taxonomyService.loadBaseTaxonomy().rootCategories()) {
-            assertTrue(cat.uri() != null && cat.uri().startsWith("http://taxonomy.sirktek.no/ict#"),
-                    "Unexpected namespace for " + cat.className() + ": " + cat.uri());
-        }
+        taxonomyService.loadBaseTaxonomy().rootCategories().forEach(this::assertNamespaceRecursively);
+    }
+
+    private void assertNamespaceRecursively(CategoryInfo cat) {
+        assertTrue(cat.uri() != null && cat.uri().startsWith("http://taxonomy.sirktek.no/ict#"),
+                "Unexpected namespace for " + cat.className() + ": " + cat.uri());
+        cat.children().forEach(this::assertNamespaceRecursively);
     }
 
     @Test

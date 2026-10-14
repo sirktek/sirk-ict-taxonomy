@@ -1,57 +1,54 @@
 package no.sirktek.taxonomy;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.junit.jupiter.api.BeforeAll;
+import no.sirktek.taxonomy.model.CategoryInfo;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Verifies that the ICT taxonomy opts its asset classes into the cross-cutting
- * common properties. The opt-in is a {@code schema:domainIncludes} triple that
- * only the merged graph in the consumer sees, so it is checked at the Jena
- * level rather than through the domain loader.
+ * Pins that ICT opts into no commons property: nothing from commons (accounting,
+ * commercial terms, ...) attaches to any ICT class.
  */
 class CommonPropertyOptInTest {
 
-    private static final String COMMON = "http://taxonomy.sirktek.no/common#";
     private static final String NS = "http://taxonomy.sirktek.no/ict#";
-    private static Model model;
+    private static final Set<String> ACCOUNTING = Set.of(
+            "ledgerAccount", "depreciationGroup", "valuations", "bookValue", "taxValue", "wealthTaxValue");
 
-    @BeforeAll
-    static void load() throws IOException {
-        model = ModelFactory.createDefaultModel();
-        try (InputStream in = CommonPropertyOptInTest.class.getResourceAsStream("/taxonomy/ict-base.ttl")) {
-            assertNotNull(in, "ict-base.ttl missing from classpath");
-            model.read(in, null, "TURTLE");
+    private final IctTaxonomyService service = new IctTaxonomyService();
+
+    private List<CategoryInfo> allCategories() {
+        List<CategoryInfo> all = new ArrayList<>();
+        service.loadBaseTaxonomy().rootCategories().forEach(r -> collect(r, all));
+        return all;
+    }
+
+    private void collect(CategoryInfo c, List<CategoryInfo> out) {
+        out.add(c);
+        c.children().forEach(ch -> collect(ch, out));
+    }
+
+    @Test
+    void noIctClassCarriesACommonsProperty() {
+        List<CategoryInfo> all = allCategories();
+        assertFalse(all.isEmpty());
+        for (CategoryInfo c : all) {
+            c.properties().forEach(p -> assertTrue(p.uri() != null && p.uri().startsWith(NS),
+                    c.className() + " carries non-ICT property " + p.name() + " (" + p.uri() + ")"));
         }
     }
 
     @Test
-    void wealthTaxValueIsNotStoredForOperatingAssets() {
-        // formuesverdi for driftsmidler is the tax written-down value by rule, so it is derived
-        Property domainIncludes = model.createProperty("https://schema.org/domainIncludes");
-        assertFalse(model.contains(model.createResource(COMMON + "wealthTaxValue"), domainIncludes, (org.apache.jena.rdf.model.RDFNode) null));
-    }
-
-    @Test
-    void assetClassesOptIntoAccountingProperties() {
-        Property domainIncludes = model.createProperty("https://schema.org/domainIncludes");
-        for (String cls : List.of("Hardware", "Software")) {
-            Resource target = model.createResource(NS + cls);
-            for (String prop : List.of("ledgerAccount", "bookValue", "taxValue", "depreciationGroup")) {
-                assertTrue(model.contains(model.createResource(COMMON + prop), domainIncludes, target),
-                        "common:" + prop + " should include " + cls + " in its domain");
-            }
+    void noIctClassCarriesAccountingProperties() {
+        for (CategoryInfo c : allCategories()) {
+            c.properties().forEach(p -> assertFalse(ACCOUNTING.contains(p.name()),
+                    c.className() + " carries accounting property " + p.name()));
         }
     }
 }
