@@ -23,10 +23,10 @@ ict:ICT        "ICT" / "IKT"                 (root)
 
 `ict:Network` is deliberately **separate from `ict:NetworkEquipment`**: the former is a logical grouping (tenants create org-specific subcategories under it to document a network and its layout — `cidr`/VLAN/gateway — in one place); the latter is the physical device type under Hardware. Hardware carries a multi-valued `network` property (`MULTI_CATEGORY`, range `ict:Network`) so a device can belong to several networks; membership is realized as the asset's category memberships filtered to the `ict:Network` subtree.
 
-Shared properties (`manufacturer`, `model`, `purchaseDate`) span Hardware and Software via `schema:domainIncludes`.
+`manufacturer`, `model` (both Hardware and Software) and `serialNumber` (Hardware) are declared in commons ("Shared asset properties") and opted in here via `schema:domainIncludes`. `purchaseDate` stays ICT and spans Hardware and Software.
 
 - **Namespace:** `http://taxonomy.sirktek.no/ict#`
-- **Depends on:** `no.sirktek:taxonomy-commons` (Manufacturer/Model)
+- **Depends on:** `no.sirktek:taxonomy-commons` 3.19 (Manufacturer/Model and the shared asset properties)
 
 ## Build
 

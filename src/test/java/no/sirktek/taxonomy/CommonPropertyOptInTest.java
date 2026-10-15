@@ -1,6 +1,7 @@
 package no.sirktek.taxonomy;
 
 import no.sirktek.taxonomy.model.CategoryInfo;
+import no.sirktek.taxonomy.model.PropertyDefinition;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,12 +13,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Pins that ICT opts into no commons property: nothing from commons (accounting,
- * commercial terms, ...) attaches to any ICT class.
+ * Pins that ICT opts into only the shared asset properties from commons (manufacturer,
+ * model, serialNumber); nothing else from commons (accounting, commercial terms, ...)
+ * attaches to any ICT class.
  */
 class CommonPropertyOptInTest {
 
     private static final String NS = "http://taxonomy.sirktek.no/ict#";
+    private static final String COMMON_NS = "http://taxonomy.sirktek.no/common#";
+    private static final Set<String> SHARED = Set.of("manufacturer", "model", "serialNumber");
     private static final Set<String> ACCOUNTING = Set.of(
             "ledgerAccount", "depreciationGroup", "valuations", "bookValue", "taxValue", "wealthTaxValue");
 
@@ -35,13 +39,39 @@ class CommonPropertyOptInTest {
     }
 
     @Test
-    void noIctClassCarriesACommonsProperty() {
+    void noIctClassCarriesACommonsPropertyOtherThanTheSharedOnes() {
         List<CategoryInfo> all = allCategories();
         assertFalse(all.isEmpty());
         for (CategoryInfo c : all) {
-            c.properties().forEach(p -> assertTrue(p.uri() != null && p.uri().startsWith(NS),
+            c.properties().forEach(p -> assertTrue(
+                    (p.uri() != null && p.uri().startsWith(NS))
+                            || (p.uri() != null && p.uri().equals(COMMON_NS + p.name()) && SHARED.contains(p.name())),
                     c.className() + " carries non-ICT property " + p.name() + " (" + p.uri() + ")"));
         }
+    }
+
+    @Test
+    void sharedPropertiesComeFromCommonsOnHardwareAndSoftware() {
+        assertSharedOnce("Hardware", "manufacturer");
+        assertSharedOnce("Hardware", "model");
+        assertSharedOnce("Software", "manufacturer");
+        assertSharedOnce("Software", "model");
+        assertSharedOnce("Hardware", "serialNumber");
+        assertFalse(propertyNames("Software").contains("serialNumber"));
+    }
+
+    private void assertSharedOnce(String className, String name) {
+        CategoryInfo c = allCategories().stream()
+                .filter(x -> className.equals(x.className())).findFirst().orElseThrow();
+        List<PropertyDefinition> matches = c.properties().stream()
+                .filter(p -> name.equals(p.name())).toList();
+        assertEquals(1, matches.size(), className + " should carry " + name + " once");
+        assertEquals(COMMON_NS + name, matches.get(0).uri(), className + "." + name + " IRI");
+    }
+
+    private List<String> propertyNames(String className) {
+        return allCategories().stream().filter(x -> className.equals(x.className())).findFirst()
+                .orElseThrow().properties().stream().map(p -> p.name()).toList();
     }
 
     @Test
