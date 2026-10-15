@@ -131,18 +131,10 @@ ict:SoftwareLicense a rdfs:Class ;
 # Property Definitions - Hardware + Software (shared)
 # ===================================================================
 
-ict:manufacturer a rdf:Property ;
-    rdfs:label "Manufacturer"@en, "Produsent"@no ;
-    skos:altLabel "Vendor"@en ;
-    schema:domainIncludes ict:Hardware ;
-    schema:domainIncludes ict:Software ;
-    rdfs:range common:Manufacturer .
-
-ict:model a rdf:Property ;
-    rdfs:label "Model"@en, "Modell"@no ;
-    schema:domainIncludes ict:Hardware ;
-    schema:domainIncludes ict:Software ;
-    rdfs:range common:Model .
+# manufacturer and model are declared in commons ("Shared asset properties");
+# ICT opts its classes in here.
+common:manufacturer schema:domainIncludes ict:Hardware, ict:Software .
+common:model schema:domainIncludes ict:Hardware, ict:Software .
 
 ict:purchaseDate a rdf:Property ;
     rdfs:label "Purchase Date"@en, "Kjøpsdato"@no ;
@@ -154,10 +146,8 @@ ict:purchaseDate a rdf:Property ;
 # Property Definitions - Hardware specific
 # ===================================================================
 
-ict:serialNumber a rdf:Property ;
-    rdfs:label "Serial Number"@en, "Serienummer"@no ;
-    rdfs:domain ict:Hardware ;
-    rdfs:range xsd:string .
+# serialNumber is declared in commons; ICT opts Hardware in here.
+common:serialNumber schema:domainIncludes ict:Hardware .
 
 ict:warrantyExpiry a rdf:Property ;
     rdfs:label "Warranty Expiry"@en, "Garanti utløper"@no ;
