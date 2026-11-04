@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Pins that ICT opts into only the shared asset properties from commons (manufacturer,
- * model, serialNumber); nothing else from commons (accounting, commercial terms, ...)
+ * model, serialNumber, condition); nothing else from commons (accounting, commercial terms, ...)
  * attaches to any ICT class.
  */
 class CommonPropertyOptInTest {
 
     private static final String NS = "http://taxonomy.sirktek.no/ict#";
     private static final String COMMON_NS = "http://taxonomy.sirktek.no/common#";
-    private static final Set<String> SHARED = Set.of("manufacturer", "model", "serialNumber");
+    private static final Set<String> SHARED = Set.of("manufacturer", "model", "serialNumber", "condition");
     private static final Set<String> ACCOUNTING = Set.of(
             "ledgerAccount", "depreciationGroup", "valuations", "bookValue", "taxValue", "wealthTaxValue");
 
@@ -58,6 +58,8 @@ class CommonPropertyOptInTest {
         assertSharedOnce("Software", "model");
         assertSharedOnce("Hardware", "serialNumber");
         assertFalse(propertyNames("Software").contains("serialNumber"));
+        assertSharedOnce("Hardware", "condition");
+        assertFalse(propertyNames("Software").contains("condition"));
     }
 
     private void assertSharedOnce(String className, String name) {
