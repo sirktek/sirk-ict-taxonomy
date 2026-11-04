@@ -146,8 +146,9 @@ ict:purchaseDate a rdf:Property ;
 # Property Definitions - Hardware specific
 # ===================================================================
 
-# serialNumber is declared in commons; ICT opts Hardware in here.
+# serialNumber and condition are declared in commons; ICT opts Hardware in here.
 common:serialNumber schema:domainIncludes ict:Hardware .
+common:condition schema:domainIncludes ict:Hardware .
 
 ict:warrantyExpiry a rdf:Property ;
     rdfs:label "Warranty Expiry"@en, "Garanti utløper"@no ;
