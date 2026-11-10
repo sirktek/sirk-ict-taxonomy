@@ -21,7 +21,10 @@ class CommonPropertyOptInTest {
 
     private static final String NS = "http://taxonomy.sirktek.no/ict#";
     private static final String COMMON_NS = "http://taxonomy.sirktek.no/common#";
-    private static final Set<String> SHARED = Set.of("manufacturer", "model", "serialNumber", "condition");
+    private static final Set<String> SHARED = Set.of("manufacturer", "model", "serialNumber", "condition",
+            "newPriceExVAT", "yearOfManufacture", "installationYear");
+    private static final String XSD_INTEGER = "http://www.w3.org/2001/XMLSchema#integer";
+    private static final String XSD_DECIMAL = "http://www.w3.org/2001/XMLSchema#decimal";
     private static final Set<String> ACCOUNTING = Set.of(
             "ledgerAccount", "depreciationGroup", "valuations", "bookValue", "taxValue", "wealthTaxValue");
 
@@ -60,6 +63,44 @@ class CommonPropertyOptInTest {
         assertFalse(propertyNames("Software").contains("serialNumber"));
         assertSharedOnce("Hardware", "condition");
         assertFalse(propertyNames("Software").contains("condition"));
+    }
+
+    private PropertyDefinition once(String className, String name) {
+        CategoryInfo c = allCategories().stream()
+                .filter(x -> className.equals(x.className())).findFirst().orElseThrow();
+        List<PropertyDefinition> matches = c.properties().stream()
+                .filter(p -> name.equals(p.name())).toList();
+        assertEquals(1, matches.size(), className + " should carry " + name + " once");
+        return matches.get(0);
+    }
+
+    @Test
+    void newPriceOnHardwareAndSoftwareIsCommercial() {
+        for (String cls : List.of("Hardware", "Software")) {
+            PropertyDefinition p = once(cls, "newPriceExVAT");
+            assertEquals(COMMON_NS + "newPriceExVAT", p.uri(), cls + ".newPriceExVAT IRI");
+            assertEquals(XSD_DECIMAL, p.rangeType(), cls + ".newPriceExVAT range");
+            assertEquals("commercial", p.privateSet(), cls + ".newPriceExVAT privateSet");
+        }
+    }
+
+    @Test
+    void installationYearOnHardwareAndSoftwareIsPublicInteger() {
+        for (String cls : List.of("Hardware", "Software")) {
+            PropertyDefinition p = once(cls, "installationYear");
+            assertEquals(COMMON_NS + "installationYear", p.uri(), cls + ".installationYear IRI");
+            assertEquals(XSD_INTEGER, p.rangeType(), cls + ".installationYear range");
+            assertTrue(p.privateSet() == null || p.privateSet().isBlank(), cls + ".installationYear is public");
+        }
+    }
+
+    @Test
+    void yearOfManufactureIsOnHardwareOnlyAsPublicInteger() {
+        PropertyDefinition p = once("Hardware", "yearOfManufacture");
+        assertEquals(COMMON_NS + "yearOfManufacture", p.uri());
+        assertEquals(XSD_INTEGER, p.rangeType());
+        assertTrue(p.privateSet() == null || p.privateSet().isBlank(), "Hardware.yearOfManufacture is public");
+        assertFalse(propertyNames("Software").contains("yearOfManufacture"));
     }
 
     private void assertSharedOnce(String className, String name) {

@@ -25,8 +25,10 @@ ict:ICT        "ICT" / "IKT"                 (root)
 
 `manufacturer`, `model` (both Hardware and Software) and `serialNumber` (Hardware) are declared in commons ("Shared asset properties") and opted in here via `schema:domainIncludes`. `purchaseDate` stays ICT and spans Hardware and Software.
 
+Three more commons terms are opted in here: `newPriceExVAT` (Hardware and Software, commercial, excl. VAT), `installationYear` (Hardware and Software, public), and `yearOfManufacture` (Hardware only; Software has no year of manufacture).
+
 - **Namespace:** `http://taxonomy.sirktek.no/ict#`
-- **Depends on:** `no.sirktek:taxonomy-commons` 3.19 (Manufacturer/Model and the shared asset properties)
+- **Depends on:** `no.sirktek:taxonomy-commons` 3.26 (Manufacturer/Model, the shared asset properties, and the age and new-price terms)
 
 ## Build
 

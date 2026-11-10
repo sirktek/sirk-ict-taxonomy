@@ -135,6 +135,9 @@ ict:SoftwareLicense a rdfs:Class ;
 # ICT opts its classes in here.
 common:manufacturer schema:domainIncludes ict:Hardware, ict:Software .
 common:model schema:domainIncludes ict:Hardware, ict:Software .
+# newPriceExVAT (commercial) and installationYear (public) are declared in commons too.
+common:newPriceExVAT schema:domainIncludes ict:Hardware, ict:Software .
+common:installationYear schema:domainIncludes ict:Hardware, ict:Software .
 
 ict:purchaseDate a rdf:Property ;
     rdfs:label "Purchase Date"@en, "Kjøpsdato"@no ;
@@ -149,6 +152,7 @@ ict:purchaseDate a rdf:Property ;
 # serialNumber and condition are declared in commons; ICT opts Hardware in here.
 common:serialNumber schema:domainIncludes ict:Hardware .
 common:condition schema:domainIncludes ict:Hardware .
+common:yearOfManufacture schema:domainIncludes ict:Hardware .
 
 ict:warrantyExpiry a rdf:Property ;
     rdfs:label "Warranty Expiry"@en, "Garanti utløper"@no ;
