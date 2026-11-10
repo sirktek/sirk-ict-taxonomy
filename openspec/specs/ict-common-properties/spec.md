@@ -2,7 +2,9 @@
 
 ## Purpose
 TBD - created by archiving change adopt-shared-commons-properties. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: ICT has a single root class
 
 The ICT taxonomy SHALL have exactly one root class, `ict:ICT`, labelled "ICT" in English and
@@ -21,19 +23,6 @@ subclasses, keeping their URIs and labels.
 - **WHEN** `IctTaxonomyService` reads `NetworkEquipment`
 - **THEN** its `parentClassName` is `Hardware`
 
-### Requirement: ICT classes carry no commons properties
-
-The ICT taxonomy SHALL NOT opt any ICT class into a commons property; in particular no
-accounting property.
-
-#### Scenario: Only ICT properties
-- **WHEN** `IctTaxonomyService` loads the base taxonomy and every category is visited
-- **THEN** every property's `uri` starts with `http://taxonomy.sirktek.no/ict#`
-
-#### Scenario: No accounting on ICT
-- **WHEN** `IctTaxonomyService` loads the base taxonomy and every category is visited
-- **THEN** no category has any of the properties `ledgerAccount`, `depreciationGroup`, `valuations`, `bookValue`, `taxValue`, `wealthTaxValue`
-
 ### Requirement: Maven Central publishing is manual
 
 A merge to `main` SHALL tag `3.<run number>` and publish to GitHub Packages only. Publishing a
@@ -48,3 +37,29 @@ input.
 - **WHEN** "Publish release to Maven Central" is run with input `tag` `3.17`
 - **THEN** the workflow checks out `3.17`, resolves taxonomy-commons from GitHub Packages, sets version `3.17` and deploys with the `deployment` profile to Maven Central
 
+### Requirement: ICT carries the shared, new-price and age commons properties
+
+The ICT taxonomy SHALL opt `ict:Hardware` and `ict:Software` into `common:manufacturer` and
+`common:model`, `common:newPriceExVAT` and `common:installationYear`, `ict:Hardware` only into
+`common:serialNumber`, `common:condition` and `common:yearOfManufacture`, and no ICT class into any other commons property. Every other property on
+an ICT class SHALL have an `ict#` IRI.
+
+#### Scenario: Only ICT and the opted-in commons properties
+- **WHEN** `IctTaxonomyService` loads the base taxonomy and every category is visited
+- **THEN** every property's `uri` either starts with `http://taxonomy.sirktek.no/ict#` or is `http://taxonomy.sirktek.no/common#` followed by one of `manufacturer`, `model`, `serialNumber`, `condition`, `newPriceExVAT`, `yearOfManufacture`, `installationYear`
+
+#### Scenario: New price on Hardware
+- **WHEN** `IctTaxonomyService` loads the base taxonomy and the Hardware category is read
+- **THEN** it has one property `newPriceExVAT` with `uri` `http://taxonomy.sirktek.no/common#newPriceExVAT`, `rangeType` `http://www.w3.org/2001/XMLSchema#decimal` and `privateSet` `commercial`
+
+#### Scenario: Age properties on Hardware
+- **WHEN** `IctTaxonomyService` loads the base taxonomy and the Hardware category is read
+- **THEN** it has one property `yearOfManufacture` with `uri` `http://taxonomy.sirktek.no/common#yearOfManufacture` and one `installationYear` with `uri` `http://taxonomy.sirktek.no/common#installationYear`, both with `rangeType` `http://www.w3.org/2001/XMLSchema#integer` and no `privateSet`
+
+#### Scenario: New price and installation year on Software, no year of manufacture
+- **WHEN** `IctTaxonomyService` loads the base taxonomy and the Software category is read
+- **THEN** it has one property `newPriceExVAT` with `uri` `http://taxonomy.sirktek.no/common#newPriceExVAT` and `privateSet` `commercial`, one `installationYear` with `uri` `http://taxonomy.sirktek.no/common#installationYear`, `rangeType` `http://www.w3.org/2001/XMLSchema#integer` and no `privateSet`, and no property `yearOfManufacture`
+
+#### Scenario: No accounting on ICT
+- **WHEN** `IctTaxonomyService` loads the base taxonomy and every category is visited
+- **THEN** no category has any of the properties `ledgerAccount`, `depreciationGroup`, `valuations`, `bookValue`, `taxValue`, `wealthTaxValue`
