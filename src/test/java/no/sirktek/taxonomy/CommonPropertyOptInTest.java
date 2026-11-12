@@ -22,7 +22,8 @@ class CommonPropertyOptInTest {
     private static final String NS = "http://taxonomy.sirktek.no/ict#";
     private static final String COMMON_NS = "http://taxonomy.sirktek.no/common#";
     private static final Set<String> SHARED = Set.of("manufacturer", "model", "serialNumber", "condition",
-            "newPriceExVAT", "yearOfManufacture", "installationYear");
+            "newPriceExVAT", "yearOfManufacture", "installationYear",
+            "expectedServiceLife", "weight", "emissionPerUnit");
     private static final String XSD_INTEGER = "http://www.w3.org/2001/XMLSchema#integer";
     private static final String XSD_DECIMAL = "http://www.w3.org/2001/XMLSchema#decimal";
     private static final Set<String> ACCOUNTING = Set.of(
@@ -101,6 +102,19 @@ class CommonPropertyOptInTest {
         assertEquals(XSD_INTEGER, p.rangeType());
         assertTrue(p.privateSet() == null || p.privateSet().isBlank(), "Hardware.yearOfManufacture is public");
         assertFalse(propertyNames("Software").contains("yearOfManufacture"));
+    }
+
+    @Test
+    void serviceLifeWeightAndEmissionAreOnHardwareOnly() {
+        String emissionEntry = COMMON_NS + "EmissionEntry";
+        for (String[] spec : new String[][] {
+                {"expectedServiceLife", XSD_INTEGER}, {"weight", XSD_DECIMAL}, {"emissionPerUnit", emissionEntry}}) {
+            PropertyDefinition p = once("Hardware", spec[0]);
+            assertEquals(COMMON_NS + spec[0], p.uri(), "Hardware." + spec[0] + " IRI");
+            assertEquals(spec[1], p.rangeType(), "Hardware." + spec[0] + " range");
+            assertTrue(p.privateSet() == null || p.privateSet().isBlank(), "Hardware." + spec[0] + " is public");
+            assertFalse(propertyNames("Software").contains(spec[0]), "Software carries " + spec[0]);
+        }
     }
 
     private void assertSharedOnce(String className, String name) {
