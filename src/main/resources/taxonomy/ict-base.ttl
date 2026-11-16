@@ -18,7 +18,8 @@
 
 ict:ICT a rdfs:Class ;
     rdfs:label "ICT"@en, "IKT"@no ;
-    rdfs:comment "Root class for all ICT assets"@en .
+    rdfs:comment "Root class for all ICT assets"@en ;
+    rdfs:comment "Rotklasse for alle IKT-eiendeler"@no .
 
 # ===================================================================
 # Top-level ICT subcategories
@@ -27,12 +28,14 @@ ict:ICT a rdfs:Class ;
 ict:Hardware a rdfs:Class ;
     rdfs:subClassOf ict:ICT ;
     rdfs:label "Hardware"@en, "Maskinvare"@no ;
-    rdfs:comment "Physical IT hardware: computers, network devices and peripherals"@en .
+    rdfs:comment "Physical IT hardware: computers, network devices and peripherals"@en ;
+    rdfs:comment "Fysisk IT-maskinvare: datamaskiner, nettverksutstyr og periferiutstyr"@no .
 
 ict:Software a rdfs:Class ;
     rdfs:subClassOf ict:ICT ;
     rdfs:label "Software"@en, "Programvare"@no ;
-    rdfs:comment "Software assets: applications, operating systems and licenses"@en .
+    rdfs:comment "Software assets: applications, operating systems and licenses"@en ;
+    rdfs:comment "Programvareeiendeler: applikasjoner, operativsystemer og lisenser"@no .
 
 # Logical network grouping (NOT a device — that is ict:NetworkEquipment under
 # Hardware). Tenants create org-specific subcategories here (e.g. "HQ Network")
@@ -40,7 +43,8 @@ ict:Software a rdfs:Class ;
 ict:Network a rdfs:Class ;
     rdfs:subClassOf ict:ICT ;
     rdfs:label "Network"@en, "Nettverk"@no ;
-    rdfs:comment "A logical network grouping: an org-specific network that equipment belongs to"@en .
+    rdfs:comment "A logical network grouping: an org-specific network that equipment belongs to"@en ;
+    rdfs:comment "En logisk nettverksgruppering: et virksomhetsspesifikt nettverk som utstyr hører til"@no .
 
 # ===================================================================
 # Hardware subcategories
@@ -49,64 +53,76 @@ ict:Network a rdfs:Class ;
 ict:Computer a rdfs:Class ;
     rdfs:subClassOf ict:Hardware ;
     rdfs:label "Computer"@en, "Datamaskin"@no ;
-    rdfs:comment "Computers including desktops, laptops and servers"@en .
+    rdfs:comment "Computers including desktops, laptops and servers"@en ;
+    rdfs:comment "Datamaskiner, inkludert stasjonære PC-er, bærbare PC-er og servere"@no .
 
 ict:Desktop a rdfs:Class ;
     rdfs:subClassOf ict:Computer ;
     rdfs:label "Desktop"@en, "Stasjonær PC"@no ;
-    rdfs:comment "Desktop/workstation computer"@en .
+    rdfs:comment "Desktop/workstation computer"@en ;
+    rdfs:comment "Stasjonær datamaskin/arbeidsstasjon"@no .
 
 ict:Laptop a rdfs:Class ;
     rdfs:subClassOf ict:Computer ;
     rdfs:label "Laptop"@en, "Bærbar PC"@no ;
-    rdfs:comment "Portable laptop computer"@en .
+    rdfs:comment "Portable laptop computer"@en ;
+    rdfs:comment "Bærbar datamaskin"@no .
 
 ict:Server a rdfs:Class ;
     rdfs:subClassOf ict:Computer ;
     rdfs:label "Server"@en, "Server"@no ;
-    rdfs:comment "Server computer"@en .
+    rdfs:comment "Server computer"@en ;
+    rdfs:comment "Serverdatamaskin"@no .
 
 ict:NetworkEquipment a rdfs:Class ;
     rdfs:subClassOf ict:Hardware ;
     rdfs:label "Network Equipment"@en, "Nettverksutstyr"@no ;
     skos:altLabel "Networking Equipment"@en ;
-    rdfs:comment "Physical networking devices: routers, switches, access points, firewalls"@en .
+    rdfs:comment "Physical networking devices: routers, switches, access points, firewalls"@en ;
+    rdfs:comment "Fysiske nettverksenheter: rutere, svitsjer, tilgangspunkter, brannmurer"@no .
 
 ict:Router a rdfs:Class ;
     rdfs:subClassOf ict:NetworkEquipment ;
     rdfs:label "Router"@en, "Ruter"@no ;
-    rdfs:comment "Network router"@en .
+    rdfs:comment "Network router"@en ;
+    rdfs:comment "Nettverksruter"@no .
 
 ict:Switch a rdfs:Class ;
     rdfs:subClassOf ict:NetworkEquipment ;
     rdfs:label "Switch"@en, "Svitsj"@no ;
-    rdfs:comment "Network switch"@en .
+    rdfs:comment "Network switch"@en ;
+    rdfs:comment "Nettverkssvitsj"@no .
 
 ict:AccessPoint a rdfs:Class ;
     rdfs:subClassOf ict:NetworkEquipment ;
     rdfs:label "Access Point"@en, "Aksesspunkt"@no ;
     skos:altLabel "Wireless Access Point"@en ;
-    rdfs:comment "Wireless access point"@en .
+    rdfs:comment "Wireless access point"@en ;
+    rdfs:comment "Trådløst tilgangspunkt"@no .
 
 ict:Firewall a rdfs:Class ;
     rdfs:subClassOf ict:NetworkEquipment ;
     rdfs:label "Firewall"@en, "Brannmur"@no ;
-    rdfs:comment "Network firewall appliance"@en .
+    rdfs:comment "Network firewall appliance"@en ;
+    rdfs:comment "Brannmur for nettverk"@no .
 
 ict:Peripheral a rdfs:Class ;
     rdfs:subClassOf ict:Hardware ;
     rdfs:label "Peripheral"@en, "Tilleggsutstyr"@no ;
-    rdfs:comment "Peripheral hardware such as monitors and printers"@en .
+    rdfs:comment "Peripheral hardware such as monitors and printers"@en ;
+    rdfs:comment "Periferiutstyr som skjermer og skrivere"@no .
 
 ict:Monitor a rdfs:Class ;
     rdfs:subClassOf ict:Peripheral ;
     rdfs:label "Monitor"@en, "Skjerm"@no ;
-    rdfs:comment "Display/monitor"@en .
+    rdfs:comment "Display/monitor"@en ;
+    rdfs:comment "Skjerm"@no .
 
 ict:Printer a rdfs:Class ;
     rdfs:subClassOf ict:Peripheral ;
     rdfs:label "Printer"@en, "Skriver"@no ;
-    rdfs:comment "Printer"@en .
+    rdfs:comment "Printer"@en ;
+    rdfs:comment "Skriver"@no .
 
 # ===================================================================
 # Software subcategories
@@ -115,17 +131,20 @@ ict:Printer a rdfs:Class ;
 ict:Application a rdfs:Class ;
     rdfs:subClassOf ict:Software ;
     rdfs:label "Application"@en, "Applikasjon"@no ;
-    rdfs:comment "Software application"@en .
+    rdfs:comment "Software application"@en ;
+    rdfs:comment "Programvareapplikasjon"@no .
 
 ict:OperatingSystem a rdfs:Class ;
     rdfs:subClassOf ict:Software ;
     rdfs:label "Operating System"@en, "Operativsystem"@no ;
-    rdfs:comment "Operating system software"@en .
+    rdfs:comment "Operating system software"@en ;
+    rdfs:comment "Operativsystem"@no .
 
 ict:SoftwareLicense a rdfs:Class ;
     rdfs:subClassOf ict:Software ;
     rdfs:label "Software License"@en, "Programvarelisens"@no ;
-    rdfs:comment "A software license or subscription held as an asset"@en .
+    rdfs:comment "A software license or subscription held as an asset"@en ;
+    rdfs:comment "En programvarelisens eller et abonnement som holdes som eiendel"@no .
 
 # ===================================================================
 # Property Definitions - Hardware + Software (shared)
